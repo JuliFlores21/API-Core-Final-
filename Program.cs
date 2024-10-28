@@ -12,8 +12,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 // Configurar CORS para permitir el origen del frontend
-builder.Services.AddCors(options => { 
-    options.AddPolicy("PermitirFrontend", policy => { policy.WithOrigins("http://localhost:8080") .AllowAnyHeader() .AllowAnyMethod(); }); });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTodos", policy =>
+    {
+        policy.AllowAnyOrigin() // Permitir cualquier origen
+              .AllowAnyHeader()  // Permitir cualquier encabezado
+              .AllowAnyMethod(); // Permitir cualquier método HTTP (GET, POST, PUT, etc.)
+    });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,7 +30,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseCors("PermitirFrontend");
+app.UseCors("PermitirTodos");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
